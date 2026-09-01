@@ -8,7 +8,7 @@
  * Parameters:
  * - Total Height: 25 mm
  * - Wall Thickness: >= 3 mm (We use 3.5 mm for high strength)
- * - Print Clearance: 0.2 mm (to ensure a snug but doable push-fit)
+ * - Print Clearance: 0.25 mm (to ensure a snug but doable push-fit)
  *
  * Print Recommendation:
  * - Print flange-down (default orientation) for a smooth top surface 
