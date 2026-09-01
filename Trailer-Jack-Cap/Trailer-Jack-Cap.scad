@@ -67,15 +67,15 @@ module trailer_jack_cap() {
                 cylinder(h = chamfer_height, d1 = plug_od, d2 = plug_od - (2 * chamfer_height));
                 
             // Tension Bumps on both sides (0 and 180 degrees)
-            // 0 degrees (positive X side)
+            // 0 degrees (positive X side) - length is tab_width - 0.5 to keep it strictly on the tab
             translate([plug_od/2 - bump_radius + bump_protrusion, 0, bump_z])
                 rotate([90, 0, 0])
-                    cylinder(h = tab_width + 4, r = bump_radius, center = true);
+                    cylinder(h = tab_width - 0.5, r = bump_radius, center = true);
                     
-            // 180 degrees (negative X side)
+            // 180 degrees (negative X side) - length is tab_width - 0.5 to keep it strictly on the tab
             translate([-(plug_od/2 - bump_radius + bump_protrusion), 0, bump_z])
                 rotate([90, 0, 0])
-                    cylinder(h = tab_width + 4, r = bump_radius, center = true);
+                    cylinder(h = tab_width - 0.5, r = bump_radius, center = true);
         }
         
         // --- Inner Cavity (Hollow out the cap to save material and meet wall thickness) ---
