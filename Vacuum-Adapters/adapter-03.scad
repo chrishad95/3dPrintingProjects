@@ -24,18 +24,18 @@ $fn = 128;
 wall           = 3.0;     // wall thickness throughout
 
 // End A – deep socket, attachment (OD = 40 mm) slides in
-attach_od      = 40.0;
+attach_od      = 39.8;
 socket_a_clear = 0.3;                              // radial clearance
 socket_a_id    = attach_od + 2 * socket_a_clear;  // ~40.6 mm
 socket_a_od    = socket_a_id + 2 * wall;           // ~46.6 mm
-socket_a_len   = 55.0;                             // insertion depth
+socket_a_len   = 60.0;                             // insertion depth
 
 // End B – shallow socket, slides over tube (OD = 41 mm)
-tube_od        = 41.0;
+tube_od        = 40.6;
 socket_b_clear = 0.3;                              // radial clearance
 socket_b_id    = tube_od + 2 * socket_b_clear;    // ~41.6 mm
 socket_b_od    = socket_b_id + 2 * wall;           // ~47.6 mm
-socket_b_len   = 30.0;                             // insertion depth
+socket_b_len   = 32.0;                             // insertion depth
 
 total_length   = socket_a_len + socket_b_len;      // 85 mm
 
