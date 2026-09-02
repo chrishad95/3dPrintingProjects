@@ -20,7 +20,7 @@ $fn = 128;
 wall          = 3.0;      // socket wall thickness
 
 // Tube OD and fit
-tube_od       = 40.8;
+tube_od       = 40.6;
 socket_clear  = 0.3;                         // radial clearance
 socket_id     = tube_od + 2 * socket_clear;  // ~41.4 mm – tube slides in
 socket_od     = socket_id + 2 * wall;        // ~47.4 mm
