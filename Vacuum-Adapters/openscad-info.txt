@@ -1,0 +1,1 @@
+OpenSCAD is installed in the following directory  C:\Programs\OpenSCAD-2021.01-x86-64\openscad-2021.01
