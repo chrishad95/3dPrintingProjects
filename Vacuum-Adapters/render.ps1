@@ -8,7 +8,8 @@ $openscad = "C:\Programs\OpenSCAD-2021.01-x86-64\openscad-2021.01\openscad.exe"
 # Each entry: @(scad file, camera string)
 $adapters = @(
     @("adapter-01.scad", "0,0,38,55,0,25,200"),
-    @("adapter-02.scad", "0,0,25,55,0,25,180")
+    @("adapter-02.scad", "0,0,25,55,0,25,180"),
+    @("adapter-03.scad", "0,0,42,55,0,25,200")
 )
 
 foreach ($entry in $adapters) {
