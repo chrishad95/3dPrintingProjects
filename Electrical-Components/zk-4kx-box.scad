@@ -1,26 +1,14 @@
 // ============================================================
-//  ZK-4KX Buck-Boost Converter Project Box  –  v2
+//  ZK-4KX Buck-Boost Converter Project Box  –  base library
 //
-//  Two-part design:
-//    Part 1: Shell  – front face with panel cutout, open back,
-//                     inner ledge near the back the plate rests on,
-//                     M3 screw bosses at the four back corners.
-//    Part 2: Back plate – flush-fitting removable back with vent
-//                         holes and M3 screw holes.
+//  Parameters and modules shared by the shell and back plate.
+//  This file produces NO geometry on its own — include it from
+//  a wrapper file and call shell() or back_plate().
 //
-//  Render control (set at bottom of file):
-//    render_part = "shell"      – shell only
-//    render_part = "back"       – back plate only (offset for printing)
-//    render_part = "both"       – both parts in assembly position
-//
-//  Key dimensions (all adjustable at the top):
-//    cutout_l × cutout_w  = panel cutout for the module
+//  Key dimensions:
+//    cutout_l × cutout_w  = panel cutout for the ZK-4KX module
 //    module_depth         = interior depth (module + wiring clearance)
-//    wall                 = box wall thickness
-//
-//  Print orientation:
-//    Shell      : front face DOWN – no supports needed
-//    Back plate : flat face DOWN  – no supports needed
+//    wall                 = wall thickness throughout
 // ============================================================
 
 $fn = 64;
@@ -64,11 +52,10 @@ m3_insert_d   = 4.2;    // M3 heat-set insert hole in boss (4.2 mm for M3)
 m3_insert_h   = 4.0;    // depth of insert hole
 
 // Vent holes on back plate
-// Usable area avoids the corner screw holes (boss_inset radius + vent_d/2 gap)
 vent_d         = 4.0;
 vent_rows      = 3;
 vent_cols      = 5;
-vent_margin_x  = boss_inset + vent_d;   // keep vents clear of corner bosses
+vent_margin_x  = boss_inset + vent_d;
 vent_margin_y  = boss_inset + vent_d;
 vent_spacing_x = (plate_l - 2 * vent_margin_x) / (vent_cols - 1);
 vent_spacing_y = (plate_w - 2 * vent_margin_y) / (vent_rows - 1);
@@ -85,7 +72,7 @@ boss_positions = [
     [-boss_cx, -boss_cy]
 ];
 
-// ── Helper modules ───────────────────────────────────────────
+// ── Helper ───────────────────────────────────────────────────
 
 // Rounded-corner rectangle (extruded in Z), centred on XY
 module rounded_rect(l, w, h, r) {
@@ -99,13 +86,12 @@ module rounded_rect(l, w, h, r) {
 
 // ── Part 1: Shell ─────────────────────────────────────────────
 //
-//   Z = 0         → front face outer surface (print face down here)
-//   Z = wall      → front face inner / cavity starts
-//   Z = box_h     → back opening rim
+//   Z = 0     → front face outer surface (print face down)
+//   Z = wall  → inner face / cavity starts
+//   Z = box_h → back opening rim
 //
 module shell() {
     difference() {
-        // Outer body
         rounded_rect(box_l, box_w, box_h, 3.0);
 
         // Interior cavity – full depth, open at back
@@ -122,21 +108,17 @@ module shell() {
                 cylinder(h = m3_insert_h + 0.1, d = m3_insert_d);
     }
 
-    // Inner ledge – ring of material around the cavity perimeter,
-    // sitting at Z = (box_h - plate_h - ledge_h) so the back plate
-    // rests on it flush with the back rim.
+    // Inner ledge – plate rests on this, flush with back rim
     ledge_z = box_h - plate_h - ledge_h;
     translate([0, 0, ledge_z])
         difference() {
-            // Ledge solid (inner wall footprint)
             rounded_rect(inner_l, inner_w, ledge_h, 2.0);
-            // Subtract the plate opening (plate dims + clearance already)
             translate([0, 0, -0.1])
                 rounded_rect(inner_l - 2 * ledge_d, inner_w - 2 * ledge_d,
                              ledge_h + 0.2, 1.5);
         }
 
-    // Screw bosses at back corners (added inside the cavity)
+    // Screw bosses at back corners
     for (p = boss_positions)
         translate([p[0], p[1], wall])
             cylinder(h = module_depth - plate_h, r = boss_r);
@@ -144,13 +126,11 @@ module shell() {
 
 // ── Part 2: Back plate ────────────────────────────────────────
 //
-//   Flat panel, plate_l × plate_w, plate_h thick.
-//   Z = 0 → inner face (faces into box interior)
+//   Z = 0       → inner face (faces into box interior)
 //   Z = plate_h → outer face (flush with back rim of shell)
 //
 module back_plate() {
     difference() {
-        // Plate body
         rounded_rect(plate_l, plate_w, plate_h, 1.5);
 
         // Vent holes
@@ -168,22 +148,4 @@ module back_plate() {
             translate([p[0], p[1], -0.1])
                 cylinder(h = plate_h + 0.2, d = m3_shaft_d);
     }
-}
-
-// ── Render control ────────────────────────────────────────────
-//   Change this value to switch what is rendered / exported.
-//   "shell"  → shell only  (print front-face down)
-//   "back"   → back plate only  (print either face down)
-//   "both"   → assembly view
-render_part = "both";
-
-if (render_part == "shell") {
-    shell();
-} else if (render_part == "back") {
-    back_plate();
-} else {
-    // Assembly view: shell in place, back plate shown exploded slightly
-    shell();
-    translate([0, 0, box_h + 5])
-        back_plate();
 }
