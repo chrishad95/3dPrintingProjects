@@ -1,12 +1,12 @@
 # ============================================================
-#  render.ps1  –  Render Vacuum-Adapters SCAD files to STL and PNG
+#  render.ps1  –  Render Electrical-Components SCAD files to STL and PNG
 #
 #  Usage:
 #    .\render.ps1              – renders all models
 #    .\render.ps1 all          – renders all models
-#    .\render.ps1 adapter-01   – renders only adapter-01 (name without .scad)
+#    .\render.ps1 zk-4kx-box   – renders only zk-4kx-box (name without .scad)
 #
-#  Run from the Vacuum-Adapters directory or from the repo root.
+#  Run from the Electrical-Components directory or from the repo root.
 # ============================================================
 
 param(
@@ -17,10 +17,7 @@ $openscad = "C:\Programs\OpenSCAD-2021.01-x86-64\openscad-2021.01\openscad.exe"
 
 # Registry: @(scad filename, camera string)
 $registry = @(
-    @("adapter-01.scad", "0,0,38,55,0,25,200"),
-    @("adapter-02.scad", "0,0,25,55,0,25,180"),
-    @("adapter-03.scad", "0,0,42,55,0,25,200"),
-    @("test-ring.scad",  "0,0,2,55,0,25,150")
+    @("zk-4kx-box.scad", "0,0,19,55,0,340,220")
 )
 
 # Filter to the requested model(s)
