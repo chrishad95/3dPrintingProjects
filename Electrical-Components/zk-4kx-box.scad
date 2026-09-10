@@ -23,7 +23,7 @@ cutout_r      = 1.5;    // corner radius on the cutout
 // Box geometry
 wall          = 3.0;    // wall thickness
 module_depth  = 48.0;   // interior depth – module + wiring clearance
-margin        = 8.0;    // extra margin around the cutout on all sides
+margin        = 10.5;   // extra margin around the cutout on all sides (+2.5 each side = +5mm overall)
 
 // Derived outer dimensions
 box_l         = cutout_l + 2 * margin;   // ~87.3 mm
