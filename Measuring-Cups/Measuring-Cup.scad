@@ -1,107 +1,88 @@
-// ============================================
-// 3/4 CUP MEASURING CUP
-// US cup = 236.588 mL
-// 3/4 cup = 177.44 mL
-// ============================================
+// ============================================================
+//  3/4 Cup Measuring Cup
+//
+//  US cup = 236.588 mL
+//  3/4 cup = 177.441 mL = 177,441 mm³
+//
+//  A straight-sided cylindrical cup with:
+//    • A fill-line groove at the 3/4-cup level
+//    • A raised "3/4 CUP" label on the outer wall
+//    • A flat tab handle
+//
+//  Print orientation: upright (open end UP) – no supports needed.
+// ============================================================
 
 $fn = 96;
 
-// ---------- PARAMETERS ----------
+// ── Parameters ───────────────────────────────────────────────
 
-target_volume = 177.44;     // mL (3/4 US cup)
+target_vol_mm3 = 177441;    // 177.441 mL converted to mm³ (1 mL = 1000 mm³)
 
-wall = 2.2;                 // wall thickness
-bottom = 3.0;               // bottom thickness
+inner_r        = 39.0;      // inner radius (mm) – sets cup diameter
+wall           = 2.5;       // wall thickness
+bottom_h       = 3.0;       // bottom thickness
+extra_h        = 10.0;      // headroom above fill line
 
-inner_radius = 39;          // mm
-inner_height = target_volume / (PI * inner_radius * inner_radius);
+// Derived
+inner_h   = target_vol_mm3 / (PI * inner_r * inner_r);  // ~37.2 mm
+outer_r   = inner_r + wall;
+outer_h   = bottom_h + inner_h + extra_h;
 
-// Extra height above the 3/4-cup fill volume
-extra_height = 8;
+// Fill-line groove
+groove_depth  = 0.8;   // how deep the groove cuts into the wall
+groove_height = 1.2;   // groove slot height
 
-outer_radius = inner_radius + wall;
-outer_height = inner_height + bottom + extra_height;
+// Handle (flat rectangular tab, centred at mid-height of cup)
+handle_w      = 12.0;   // handle width (Z direction on cup)
+handle_l      = 50.0;   // how far handle extends from cup wall
+handle_thick  = 6.0;    // handle thickness
+handle_hole_w = 6.0;    // finger hole width
+handle_hole_h = 28.0;   // finger hole height
 
-// Handle dimensions
-handle_width = 10;
-handle_length = 55;
-handle_round = 8;
-
-
-// ---------- CUP ----------
-
+// ── Cup body ─────────────────────────────────────────────────
 difference() {
+    // Outer cylinder
+    cylinder(h = outer_h, r = outer_r);
 
-    // Outer body
-    cylinder(
-        r = outer_radius,
-        h = outer_height
-    );
+    // Inner cavity
+    translate([0, 0, bottom_h])
+        cylinder(h = outer_h, r = inner_r);
 
-    // Hollow interior
-    translate([0, 0, bottom])
-        cylinder(
-            r = inner_radius,
-            h = outer_height
-        );
-
-    // Fill-line groove
-    translate([0, 0, bottom + inner_height])
+    // Fill-line groove on inner wall at the 3/4-cup level
+    translate([0, 0, bottom_h + inner_h - groove_height / 2])
         difference() {
-            cylinder(
-                r = inner_radius + 0.01,
-                h = 0.8
-            );
-
-            cylinder(
-                r = inner_radius - 0.8,
-                h = 0.8
-            );
+            cylinder(h = groove_height, r = inner_r + 0.01);
+            translate([0, 0, -0.1])
+                cylinder(h = groove_height + 0.2, r = inner_r - groove_depth);
         }
 }
 
-
-// ---------- HANDLE ----------
-
-translate([outer_radius - 1, -handle_width/2, outer_height/2])
-    rotate([0,90,0])
-        difference() {
-
-            // Handle outer shape
-            hull() {
-                translate([0,0,0])
-                    cylinder(
-                        r = handle_width/2,
-                        h = handle_length
-                    );
-
-                translate([0,0,handle_length])
-                    cylinder(
-                        r = handle_round,
-                        h = handle_width
-                    );
-            }
-
-            // Handle opening
-            translate([-1,0,handle_width/2])
-                rotate([0,90,0])
-                    cylinder(
-                        r = handle_width/2 - 2,
-                        h = handle_length + 5
-                    );
-        }
-
-
-// ---------- MEASUREMENT LABEL ----------
-
-// Raised "3/4 CUP" text
-translate([0, -outer_radius - 0.5, outer_height/2])
-    rotate([90,0,0])
+// ── Raised text label on outer wall ──────────────────────────
+// Placed on the side opposite the handle (–Y face), mid-height
+translate([0, -(outer_r + 0.3), bottom_h + inner_h / 2])
+    rotate([90, 0, 0])
         linear_extrude(height = 0.8)
-            text(
-                "3/4 CUP",
-                size = 7,
-                halign = "center",
-                valign = "center",
-                font = "Liberation Sans:style=Bold"
-            );
+            text("3/4 CUP",
+                 size    = 7,
+                 halign  = "center",
+                 valign  = "center",
+                 font    = "Liberation Sans:style=Bold");
+
+// ── Handle ───────────────────────────────────────────────────
+// Flat rectangular tab extending in +Y from the cup wall,
+// centred vertically on the cup, with a finger hole through it.
+handle_z = (outer_h - handle_w) / 2;   // Z position so handle is mid-height
+
+translate([0, outer_r - 1, handle_z])
+    difference() {
+        // Handle solid block
+        cube([handle_thick, handle_l + 1, handle_w], center = false);
+
+        // Finger hole centred in the handle
+        translate([
+            (handle_thick - handle_hole_w) / 2,
+            (handle_l + 1 - handle_hole_h) / 2 + 8,
+            (handle_w - (handle_w - 4)) / 2
+        ])
+            cube([handle_hole_w + 0.01, handle_hole_h, handle_w - 4]);
+    }

@@ -51,15 +51,52 @@ Both use spring-loaded cantilever retention tabs for a secure push-fit inside th
 ### 🌀 Vacuum Adapters
 **Folder:** [`Vacuum-Adapters/`](Vacuum-Adapters/)
 
-A set of adapters to connect vacuum hoses and attachments with mismatched diameters.
+A set of adapters to connect vacuum hoses and attachments with mismatched diameters. All adapters use a continuous bore (no internal blockage) with a small stop ring to limit insertion depth.
 
 | Adapter | Description | Key Dimensions |
 |---|---|---|
 | [`adapter-01.scad`](Vacuum-Adapters/adapter-01.scad) | Reducer — spigot end fits inside tube 1, socket end receives tube 2 | Tube 1 ID: 34 mm · Tube 2 OD: 37.8 mm · Length: 76 mm (3 in) |
-| [`adapter-02.scad`](Vacuum-Adapters/adapter-02.scad) | Same-size coupler — joins two identical tubes | Both tube OD: 41 mm · Length: 51 mm (2 in) |
+| [`adapter-02.scad`](Vacuum-Adapters/adapter-02.scad) | Same-size coupler — joins two identical tubes | Both tube OD: 41 mm · 32 mm insertion depth each side · Length: 64 mm |
 | [`adapter-03.scad`](Vacuum-Adapters/adapter-03.scad) | Attachment coupler — deep socket for attachment, shallow socket for tube | Attachment OD: 40 mm · Tube OD: 41 mm · Length: 85 mm |
+| [`test-ring.scad`](Vacuum-Adapters/test-ring.scad) | Test fit ring — quick print to verify diameter before printing a full adapter | ID: 57.7 mm · Wall: 3 mm · Height: 5 mm |
 
-A [`render.ps1`](Vacuum-Adapters/render.ps1) PowerShell script re-renders all adapters to STL and PNG after any `.scad` edit.
+A [`render.ps1`](Vacuum-Adapters/render.ps1) PowerShell script re-renders individual adapters or all at once (`.\render.ps1 adapter-02` or `.\render.ps1 all`).
+
+---
+
+### ⚡ Electrical Components
+**Folder:** [`Electrical-Components/`](Electrical-Components/)
+
+Project enclosures for electrical modules.
+
+#### ZK-4KX Buck-Boost Converter Box
+
+A two-part panel-mount enclosure for the ZK-4KX buck-boost converter module. The converter snaps in through a cutout on the front face; the back plate is removable for wiring access, secured with 4× M3 screws into heat-set inserts.
+
+| File | Description |
+|---|---|
+| [`zk-4kx-box.scad`](Electrical-Components/zk-4kx-box.scad) | Base library — parameters + modules (no geometry on its own) |
+| [`zk-4kx-box-shell.scad`](Electrical-Components/zk-4kx-box-shell.scad) | Shell only → [`zk-4kx-box-shell.stl`](Electrical-Components/zk-4kx-box-shell.stl) |
+| [`zk-4kx-box-back.scad`](Electrical-Components/zk-4kx-box-back.scad) | Back plate only → [`zk-4kx-box-back.stl`](Electrical-Components/zk-4kx-box-back.stl) |
+| [`zk-4kx-box-assembly.scad`](Electrical-Components/zk-4kx-box-assembly.scad) | Exploded assembly view (reference only) |
+
+Key dimensions: 92.3 × 60.3 mm outer footprint · 48 mm interior depth · 71.3 × 39.3 mm panel cutout · 5×3 vent hole grid on back plate.
+
+A [`render.ps1`](Electrical-Components/render.ps1) PowerShell script re-renders individual parts or all at once.
+
+---
+
+### 🥄 Measuring Cups
+**Folder:** [`Measuring-Cups/`](Measuring-Cups/)
+
+Parametric measuring cups sized to exact US volume measurements.
+
+| File | Description |
+|---|---|
+| [`Measuring-Cup.scad`](Measuring-Cups/Measuring-Cup.scad) | ¾ US cup (177.4 mL) — cylindrical cup with fill-line groove, raised label, and tab handle |
+| [`Measuring-Cup.stl`](Measuring-Cups/Measuring-Cup.stl) | Print-ready STL |
+
+Interior volume is computed from the target in mm³ so the fill line is always accurate regardless of radius changes. Print upright, open end up — no supports needed.
 
 ---
 
@@ -78,6 +115,9 @@ A [`render.ps1`](Vacuum-Adapters/render.ps1) PowerShell script re-renders all ad
 ```
 3dPrintingProjects/
 ├── Boat-Ladder-Bracket/       # Boat ladder replacement clip
+├── Electrical-Components/     # Electrical module enclosures
+│   └── render.ps1             # Script to re-render all models
+├── Measuring-Cups/            # Parametric measuring cups
 ├── Trailer-Jack-Cap/          # Trailer jack stand pipe caps
 ├── Vacuum-Adapters/           # Vacuum hose adapters
 │   └── render.ps1             # Script to re-render all adapters
