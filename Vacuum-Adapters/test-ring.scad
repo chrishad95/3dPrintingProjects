@@ -10,7 +10,7 @@
 $fn = 128;
 
 // ── Parameters ───────────────────────────────────────────────
-ring_id = 57.7;
+ring_id = 59.0;
 wall    = 3.0;
 ring_od = ring_id + 2 * wall;  // 63.7 mm
 height  = 5.0;
