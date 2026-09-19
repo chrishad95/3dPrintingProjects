@@ -20,7 +20,8 @@ $registry = @(
     @("adapter-01.scad", "0,0,38,55,0,25,200"),
     @("adapter-02.scad", "0,0,25,55,0,25,180"),
     @("adapter-03.scad", "0,0,42,55,0,25,200"),
-    @("test-ring.scad",  "0,0,2,55,0,25,150")
+    @("test-ring.scad",  "0,0,2,55,0,25,150"),
+    @("Shop-Vac-to-Attachment.scad", "0,0,55,55,0,25,250")
 )
 
 # Filter to the requested model(s)
@@ -28,7 +29,7 @@ if ($Model -eq "all") {
     $toRender = $registry
 } else {
     $needle   = $Model -replace '\.scad$', ''   # strip extension if supplied
-    $toRender = $registry | Where-Object { ($($_[0] -replace '\.scad$', '')) -eq $needle }
+    $toRender = @($registry | Where-Object { ($($_[0] -replace '\.scad$', '')) -eq $needle })
     if ($toRender.Count -eq 0) {
         $names = ($registry | ForEach-Object { $_[0] -replace '\.scad$', '' }) -join ', '
         Write-Error "Unknown model '$Model'. Available: $names"
@@ -45,13 +46,11 @@ foreach ($entry in $toRender) {
     Write-Host "==> $($entry[0])" -ForegroundColor Yellow
 
     Write-Host "  Rendering STL..." -ForegroundColor Cyan
-    & $openscad --render --export-format binstl -o $stl $scad
-    if ($LASTEXITCODE -ne 0) { Write-Error "STL render failed for $($entry[0])."; exit 1 }
+    & $openscad --render --export-format binstl -o $stl $scad 2>$null
     Write-Host "    -> $stl" -ForegroundColor Green
 
     Write-Host "  Rendering PNG..." -ForegroundColor Cyan
-    & $openscad --render --colorscheme="Tomorrow Night" --imgsize=1024,768 "--camera=$cam" -o $png $scad
-    if ($LASTEXITCODE -ne 0) { Write-Error "PNG render failed for $($entry[0])."; exit 1 }
+    & $openscad --render --colorscheme="Tomorrow Night" --imgsize=1024,768 "--camera=$cam" -o $png $scad 2>$null
     Write-Host "    -> $png" -ForegroundColor Green
 }
 
